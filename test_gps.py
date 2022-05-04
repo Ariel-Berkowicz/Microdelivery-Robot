@@ -35,7 +35,8 @@ while True:
             if remove_all_other_letters(rcv.decode('utf-8')[18:]).replace(',','')[:21].replace('.','').replace('-','').replace('*','').isdigit():
                 continue
             else:
-                print(remove_all_other_letters(rcv.decode('utf-8')[18:]).replace(',','')[:21])
+                rcv2 = remove_all_other_letters(rcv.decode('utf-8')[18:]).replace(',','')[:21]
+                print(rcv2[:2]+" "+ rcv2[2:10] +" "+ rcv2[10:13]+" "+rcv2[13:])
 
     except KeyboardInterrupt:
         print("\nExiting...")
