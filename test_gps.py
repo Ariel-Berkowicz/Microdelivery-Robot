@@ -1,46 +1,42 @@
 # get data from gpsd from a serial port and print it
 
-
 import gps
 import time
 import serial
 import sys
-import gpsd
+
+port = serial.Serial("/dev/serial0", baudrate=9600, timeout=10.0)
+
+line = []
+print("connected to: " + port.portstr)
 
 
-# open serial port
-ser = serial.Serial(
-    port='/dev/serial0',
-    baudrate=9600,
-    parity=serial.PARITY_NONE,
-    stopbits=serial.STOPBITS_ONE,
-    bytesize=serial.EIGHTBITS,
-    timeout=1
-)
+def remove_all_other_letters(rsv):
+    # go through the alphabet
+    alphabet = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
-
-# open gpsd
-session = gps.gps("localhost", "2947")
-session.stream(gps.WATCH_ENABLE | gps.WATCH_NEWSTYLE)
-
-def getPositionData ():
-    nx = gpsd.next()
-    if nx['class'] == 'TPV':
-        latitude = getattr(nx, 'lat', "Unknown")
-        longitude = getattr(nx, 'lon', "Unknown")
-        print("Latitude: %s and Longitude: %s" % latitude, longitude)
-
+    for letter in alphabet:
+        # if the letter is N or S or E or W then keep it
+        if letter == 'N' or letter == 'S' or letter == 'E' or letter == 'W':
+            continue
+        # if the letter is not N or S or E or W then remove it
+        else:
+            rsv = rsv.replace(letter, '')
+    return rsv
 
 while True:
     try:
-        # get data from gpsd
-        session.next()
-        # get data from serial port
-        data = ser.readline()
-        # print data
-        print(data)
-        # get position data
-        getPositionData()
+        rcv = port.readline()
+        if (('N' in rcv.decode('utf-8')[8:])
+                or ('E' in rcv.decode('utf-8')[8:])
+                or ('W' in rcv.decode('utf-8')[8:])
+                or ('S' in rcv.decode('utf-8')[8:])):
+            
+            if remove_all_other_letters(rcv.decode('utf-8')[18:]).replace(',','')[:21].replace('.','').replace('-','').replace('*','').isdigit():
+                continue
+            else:
+                print(remove_all_other_letters(rcv.decode('utf-8')[18:]).replace(',','')[:21])
+
     except KeyboardInterrupt:
         print("\nExiting...")
         sys.exit(0)
@@ -50,4 +46,3 @@ while True:
     except Exception:
         print("Error:", sys.exc_info()[0])
         sys.exit(0)
-    time.sleep(1)
