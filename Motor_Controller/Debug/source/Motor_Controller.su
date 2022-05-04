@@ -1,0 +1,9 @@
+C:\Users\jonlo\Documents\MCUXpressoIDE_11.5.1_7266\workspace\Motor_Controller\drivers/fsl_gpio.h:162:20:GPIO_PinWrite	24	static
+C:\Users\jonlo\Documents\MCUXpressoIDE_11.5.1_7266\workspace\Motor_Controller\drivers/fsl_ftm.h:437:36:FTM_CalculateCounterClkDiv	32	static
+C:\Users\jonlo\Documents\MCUXpressoIDE_11.5.1_7266\workspace\Motor_Controller\drivers/fsl_ftm.h:731:20:FTM_StartTimer	24	static
+../source/Motor_Controller.c:68:6:delay	16	static
+../source/Motor_Controller.c:79:5:main	56	static
+../source/Motor_Controller.c:129:5:forward	24	static
+../source/Motor_Controller.c:157:5:backward	24	static
+../source/Motor_Controller.c:185:5:turnLeft	24	static
+../source/Motor_Controller.c:213:5:turnRight	24	static
